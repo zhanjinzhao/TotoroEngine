@@ -1,0 +1,8 @@
+/.vs
+/Engine/Binaries
+/Engine/Intermediate
+/Engine/ThirdParty/FBX_SDK/include/
+/Engine/ThirdParty/FBX_SDK/lib/
+/Samples/*/Binaries
+/Samples/*/Intermediate
+/Engine/Resource/Models/*.fbm/
