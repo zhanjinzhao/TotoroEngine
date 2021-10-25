@@ -42,7 +42,7 @@ TD3D12StructuredBufferRef TD3D12RHI::CreateStructuredBuffer(const void* Contents
 		SrvDesc.Buffer.NumElements = ElementCount;
 		SrvDesc.Buffer.FirstElement = Offset / ElementSize;
 
-		StructuredBufferRef->SRV = std::make_unique<TD3D12ShaderResourceView>(GetDevice(), SrvDesc, BufferResource);
+		StructuredBufferRef->SetSRV(std::make_unique<TD3D12ShaderResourceView>(GetDevice(), SrvDesc, BufferResource));
 	}
 
 
@@ -72,7 +72,7 @@ TD3D12RWStructuredBufferRef TD3D12RHI::CreateRWStructuredBuffer(uint32_t Element
 		SrvDesc.Buffer.NumElements = ElementCount;
 		SrvDesc.Buffer.FirstElement = Offset / ElementSize;
 
-		RWStructuredBufferRef->SRV = std::make_unique<TD3D12ShaderResourceView>(GetDevice(), SrvDesc, BufferResource);
+		RWStructuredBufferRef->SetSRV(std::make_unique<TD3D12ShaderResourceView>(GetDevice(), SrvDesc, BufferResource));
 	}
 
 	// Create UAV
@@ -86,7 +86,7 @@ TD3D12RWStructuredBufferRef TD3D12RHI::CreateRWStructuredBuffer(uint32_t Element
 		UAVDesc.Buffer.FirstElement = Offset / ElementSize;
 		UAVDesc.Buffer.CounterOffsetInBytes = 0;
 
-		RWStructuredBufferRef->UAV = std::make_unique<TD3D12UnorderedAccessView>(GetDevice(), UAVDesc, BufferResource);
+		RWStructuredBufferRef->SetUAV(std::make_unique<TD3D12UnorderedAccessView>(GetDevice(), UAVDesc, BufferResource));
 	}
 
 	return RWStructuredBufferRef;

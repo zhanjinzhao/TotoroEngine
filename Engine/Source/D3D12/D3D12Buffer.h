@@ -26,8 +26,18 @@ typedef std::shared_ptr<TD3D12ConstantBuffer> TD3D12ConstantBufferRef;
 class TD3D12StructuredBuffer : public TD3D12Buffer
 {
 public:
-	std::unique_ptr<TD3D12ShaderResourceView> SRV = nullptr;
+	TD3D12ShaderResourceView* GetSRV()
+	{
+		return SRV.get();
+	}
 
+	void SetSRV(std::unique_ptr<TD3D12ShaderResourceView>& InSRV)
+	{
+		SRV = std::move(InSRV);
+	}
+
+private:
+	std::unique_ptr<TD3D12ShaderResourceView> SRV = nullptr;
 };
 typedef std::shared_ptr<TD3D12StructuredBuffer> TD3D12StructuredBufferRef;
 
@@ -35,6 +45,27 @@ typedef std::shared_ptr<TD3D12StructuredBuffer> TD3D12StructuredBufferRef;
 class TD3D12RWStructuredBuffer : public TD3D12Buffer
 {
 public:
+	TD3D12ShaderResourceView* GetSRV()
+	{
+		return SRV.get();
+	}
+
+	void SetSRV(std::unique_ptr<TD3D12ShaderResourceView>& InSRV)
+	{
+		SRV = std::move(InSRV);
+	}
+
+	TD3D12UnorderedAccessView* GetUAV()
+	{
+		return UAV.get();
+	}
+
+	void SetUAV(std::unique_ptr<TD3D12UnorderedAccessView>& InUAV)
+	{
+		UAV = std::move(InUAV);
+	}
+
+private:
 	std::unique_ptr<TD3D12ShaderResourceView> SRV = nullptr;
 
 	std::unique_ptr<TD3D12UnorderedAccessView> UAV = nullptr;

@@ -2790,7 +2790,7 @@ void TRender::TiledBaseLightCullingPass()
 	Shader->SetParameter("cbPass", BasePassCBRef);
 	if (LightCount > 0)
 	{
-		Shader->SetParameter("Lights", LightShaderParametersBuffer->SRV.get());
+		Shader->SetParameter("Lights", LightShaderParametersBuffer->GetSRV());
 	}
 	else
 	{
@@ -2799,7 +2799,7 @@ void TRender::TiledBaseLightCullingPass()
 	Shader->SetParameter("LightCommonData", LightCommonDataBuffer);
 	Shader->SetParameter("DepthTexture", D3D12RHI->GetViewport()->GetDepthShaderResourceView());
 	Shader->SetParameter("TiledDepthDebugTexture", TiledDepthDebugTexture->GetUAV());
-	Shader->SetParameter("TileLightInfoList", TileLightInfoList->UAV.get());
+	Shader->SetParameter("TileLightInfoList", TileLightInfoList->GetUAV());
 
 	// Bind paramters
 	Shader->BindParameters();
@@ -2864,7 +2864,7 @@ void TRender::DeferredLightingPass()
 
 	if (LightCount > 0)
 	{
-		Shader->SetParameter("Lights", LightShaderParametersBuffer->SRV.get());
+		Shader->SetParameter("Lights", LightShaderParametersBuffer->GetSRV());
 	}
 	else
 	{
@@ -2873,7 +2873,7 @@ void TRender::DeferredLightingPass()
 
 	if (RenderSettings.bUseTBDR)
 	{
-		Shader->SetParameter("LightInfoList", TileLightInfoList->SRV.get());
+		Shader->SetParameter("LightInfoList", TileLightInfoList->GetSRV());
 	}
 
 	if (bEnableIBLEnvLighting)
@@ -2942,7 +2942,7 @@ void TRender::DeferredLightingPass()
 
 	if (MeshSDFBuffer)
 	{
-		Shader->SetParameter("MeshSDFDescriptors", MeshSDFBuffer->SRV.get());
+		Shader->SetParameter("MeshSDFDescriptors", MeshSDFBuffer->GetSRV());
 	}
 	else
 	{
@@ -2951,7 +2951,7 @@ void TRender::DeferredLightingPass()
 
 	if (ObjectSDFBuffer)
 	{
-		Shader->SetParameter("ObjectSDFDescriptors", ObjectSDFBuffer->SRV.get());
+		Shader->SetParameter("ObjectSDFDescriptors", ObjectSDFBuffer->GetSRV());
 	}
 	else
 	{
@@ -3530,7 +3530,7 @@ void TRender::DebugSDFScenePass()
 
 	if (MeshSDFBuffer)
 	{
-		DebugSDFSceneShader->SetParameter("MeshSDFDescriptors", MeshSDFBuffer->SRV.get());
+		DebugSDFSceneShader->SetParameter("MeshSDFDescriptors", MeshSDFBuffer->GetSRV());
 	}
 	else
 	{
@@ -3539,7 +3539,7 @@ void TRender::DebugSDFScenePass()
 
 	if (ObjectSDFBuffer)
 	{
-		DebugSDFSceneShader->SetParameter("ObjectSDFDescriptors", ObjectSDFBuffer->SRV.get());
+		DebugSDFSceneShader->SetParameter("ObjectSDFDescriptors", ObjectSDFBuffer->GetSRV());
 	}
 	else
 	{
