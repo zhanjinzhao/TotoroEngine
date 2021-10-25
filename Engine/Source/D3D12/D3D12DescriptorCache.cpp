@@ -4,7 +4,7 @@
 TD3D12DescriptorCache::TD3D12DescriptorCache(TD3D12Device* InDevice)
 	:Device(InDevice)
 {
-	CreateCacheSrvDescriptorHeap();
+	CreateCacheCbvSrvUavDescriptorHeap();
 
 	CreateCacheRtvDescriptorHeap();
 }
@@ -14,7 +14,7 @@ TD3D12DescriptorCache::~TD3D12DescriptorCache()
 
 }
 
-void TD3D12DescriptorCache::CreateCacheSrvDescriptorHeap()
+void TD3D12DescriptorCache::CreateCacheCbvSrvUavDescriptorHeap()
 {
 	// Create the descriptor heap.
 	D3D12_DESCRIPTOR_HEAP_DESC SrvHeapDesc = {};
@@ -47,7 +47,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE TD3D12DescriptorCache::AppendCbvSrvUavDescriptors(
 	return GpuDescriptorHandle;
 }
 
-void TD3D12DescriptorCache::ResetCacheSrvDescriptorHeap()
+void TD3D12DescriptorCache::ResetCacheCbvSrvUavDescriptorHeap()
 {
 	CbvSrvUavDescriptorOffset = 0;
 }
@@ -90,7 +90,7 @@ void TD3D12DescriptorCache::ResetCacheRtvDescriptorHeap()
 
 void TD3D12DescriptorCache::Reset()
 {
-	ResetCacheSrvDescriptorHeap();
+	ResetCacheCbvSrvUavDescriptorHeap();
 
 	ResetCacheRtvDescriptorHeap();
 }

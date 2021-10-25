@@ -1238,8 +1238,8 @@ void TRender::CreateIBLEnviromentMap()
 			Shader->SetParameter("cbPass", IBLEnviromentPassCBRef[i]);
 
 			auto& TextureMap = TTextureRepository::Get().TextureMap;
-			auto& EquirectangularSRV = TextureMap[SkyCubeTextureName]->GetD3DTexture()->SRVs[0];
-			Shader->SetParameter("EquirectangularMap", EquirectangularSRV.get());
+			auto EquirectangularSRV = TextureMap[SkyCubeTextureName]->GetD3DTexture()->GetSRV();
+			Shader->SetParameter("EquirectangularMap", EquirectangularSRV);
 
 			// Bind paramters
 			Shader->BindParameters();
@@ -1563,7 +1563,7 @@ void TRender::UpdateLightData()
 				else if (RenderSettings.ShadowMapImpl == EShadowMapImpl::VSM)
 				{
 					TD3D12TextureRef VSMTexture = DirectionalLight->GetVSMTexture();
-					ShadowMapSRVs.push_back(VSMTexture->SRVs[0].get());
+					ShadowMapSRVs.push_back(VSMTexture->GetSRV());
 				}
 				assert(ShadowMapSRVs.size() <= MAX_SHADOW_MAP_2D_NUM);
 
@@ -1650,7 +1650,7 @@ void TRender::UpdateLightData()
 				else if (RenderSettings.ShadowMapImpl == EShadowMapImpl::VSM)
 				{
 					TD3D12TextureRef VSMTexture = SpotLight->GetVSMTexture();
-					ShadowMapSRVs.push_back(VSMTexture->SRVs[0].get());
+					ShadowMapSRVs.push_back(VSMTexture->GetSRV());
 				}
 				assert(ShadowMapSRVs.size() <= MAX_SHADOW_MAP_2D_NUM);
 
@@ -1984,7 +1984,7 @@ void TRender::GenerateVSMShadow(TShadowMap2D* ShadowMap, TD3D12TextureRef VSMTex
 
 	// Set parameters
 	GenerateVSMShader->SetParameter("ShadowMap", ShadowMap->GetRT()->GetSRV());
-	GenerateVSMShader->SetParameter("VSM", VSMTexture->UAVs[0].get());
+	GenerateVSMShader->SetParameter("VSM", VSMTexture->GetUAV());
 
 	// Bind paramters
 	GenerateVSMShader->BindParameters();
@@ -2002,8 +2002,8 @@ void TRender::GenerateVSMShadow(TShadowMap2D* ShadowMap, TD3D12TextureRef VSMTex
 	CommandList->SetComputeRootSignature(HorzBlurVSMShader->RootSignature.Get()); // should before binding
 
 	// Set parameters
-	HorzBlurVSMShader->SetParameter("InputTexture", VSMTexture->SRVs[0].get());
-	HorzBlurVSMShader->SetParameter("OutputTexture", VSMBlurTexture->UAVs[0].get());
+	HorzBlurVSMShader->SetParameter("InputTexture", VSMTexture->GetSRV());
+	HorzBlurVSMShader->SetParameter("OutputTexture", VSMBlurTexture->GetUAV());
 	HorzBlurVSMShader->SetParameter("cbBlurSettings", VSMBlurSettingsCB);
 
 	// Bind paramters
@@ -2021,8 +2021,8 @@ void TRender::GenerateVSMShadow(TShadowMap2D* ShadowMap, TD3D12TextureRef VSMTex
 	CommandList->SetComputeRootSignature(VertBlurVSMShader->RootSignature.Get()); // should before binding
 
 	// Set parameters
-	VertBlurVSMShader->SetParameter("InputTexture", VSMBlurTexture->SRVs[0].get());
-	VertBlurVSMShader->SetParameter("OutputTexture", VSMTexture->UAVs[0].get());
+	VertBlurVSMShader->SetParameter("InputTexture", VSMBlurTexture->GetSRV());
+	VertBlurVSMShader->SetParameter("OutputTexture", VSMTexture->GetUAV());
 	VertBlurVSMShader->SetParameter("cbBlurSettings", VSMBlurSettingsCB);
 
 	// Bind paramters
@@ -2106,7 +2106,7 @@ void TRender::GetBasePassMeshCommandMap()
 			}
 			else
 			{
-				SRV = TTextureRepository::Get().TextureMap[TextureName]->GetD3DTexture()->SRVs[0].get();
+				SRV = TTextureRepository::Get().TextureMap[TextureName]->GetD3DTexture()->GetSRV();
 			}
 
 			MeshCommand.SetShaderParameter(Pair.first, SRV);
@@ -2393,7 +2393,7 @@ void TRender::SSAOPass()
 	// Set paramters
 	SSAOShader->SetParameter("cbSSAO", SSAOPassCBRef);
 	SSAOShader->SetParameter("cbPass", BasePassCBRef);
-	SSAOShader->SetParameter("NormalGbuffer", GBufferNormal->GetTexture()->SRVs[0].get());
+	SSAOShader->SetParameter("NormalGbuffer", GBufferNormal->GetTexture()->GetSRV());
 	SSAOShader->SetParameter("DepthGbuffer", D3D12RHI->GetViewport()->GetDepthShaderResourceView());
 
 	// Bind paramters
@@ -2436,8 +2436,8 @@ void TRender::SSAOPass()
 	D3D12RHI->TransitionResource(BlurMap0->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ);
 
 	// Set parameters
-	HorzBlurShader->SetParameter("InputTexture", BlurMap0->SRVs[0].get());
-	HorzBlurShader->SetParameter("OutputTexture", BlurMap1->UAVs[0].get());
+	HorzBlurShader->SetParameter("InputTexture", BlurMap0->GetSRV());
+	HorzBlurShader->SetParameter("OutputTexture", BlurMap1->GetUAV());
 	HorzBlurShader->SetParameter("cbBlurSettings", BlurSettingsCB);
 
 	// Bind paramters
@@ -2455,8 +2455,8 @@ void TRender::SSAOPass()
 	CommandList->SetComputeRootSignature(VertBlurShader->RootSignature.Get()); // should before binding
 
 	// Set parameters
-	VertBlurShader->SetParameter("InputTexture", BlurMap1->SRVs[0].get());
-	VertBlurShader->SetParameter("OutputTexture", BlurMap0->UAVs[0].get());
+	VertBlurShader->SetParameter("InputTexture", BlurMap1->GetSRV());
+	VertBlurShader->SetParameter("OutputTexture", BlurMap0->GetUAV());
 	VertBlurShader->SetParameter("cbBlurSettings", BlurSettingsCB);
 
 	// Bind paramters
@@ -2798,7 +2798,7 @@ void TRender::TiledBaseLightCullingPass()
 	}
 	Shader->SetParameter("LightCommonData", LightCommonDataBuffer);
 	Shader->SetParameter("DepthTexture", D3D12RHI->GetViewport()->GetDepthShaderResourceView());
-	Shader->SetParameter("TiledDepthDebugTexture", TiledDepthDebugTexture->UAVs[0].get());
+	Shader->SetParameter("TiledDepthDebugTexture", TiledDepthDebugTexture->GetUAV());
 	Shader->SetParameter("TileLightInfoList", TileLightInfoList->UAV.get());
 
 	// Bind paramters
@@ -2833,7 +2833,7 @@ void TRender::DeferredLightingPass()
 
 	// Clear the ColorTexture and depth buffer.
 	float* ClearValue = ColorTexture->GetRTVClearValuePtr();
-	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->RTVs[0]->GetDescriptorHandle();
+	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->GetRTV()->GetDescriptorHandle();
 	CommandList->ClearRenderTargetView(RTVHandle, ClearValue, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
@@ -2853,14 +2853,14 @@ void TRender::DeferredLightingPass()
 	Shader->SetParameter("cbPass", BasePassCBRef);
 	Shader->SetParameter("cbDeferredLighting", DeferredLightPassCBRef);
 	Shader->SetParameter("LightCommonData", LightCommonDataBuffer);
-	Shader->SetParameter("BaseColorGbuffer", GBufferBaseColor->GetTexture()->SRVs[0].get());
-	Shader->SetParameter("NormalGbuffer", GBufferNormal->GetTexture()->SRVs[0].get());
-	Shader->SetParameter("WorldPosGbuffer", GBufferWorldPos->GetTexture()->SRVs[0].get());
-	Shader->SetParameter("OrmGbuffer", GBufferORM->GetTexture()->SRVs[0].get());
-	Shader->SetParameter("EmissiveGbuffer", GBufferEmissive->GetTexture()->SRVs[0].get());
-	Shader->SetParameter("SSAOBuffer", SSAOBuffer->GetTexture()->SRVs[0].get());
-	Shader->SetParameter("LTC_LUT1", TextureMap["LtcMat_1"]->GetD3DTexture()->SRVs[0].get());
-	Shader->SetParameter("LTC_LUT2", TextureMap["LtcMat_2"]->GetD3DTexture()->SRVs[0].get());
+	Shader->SetParameter("BaseColorGbuffer", GBufferBaseColor->GetTexture()->GetSRV());
+	Shader->SetParameter("NormalGbuffer", GBufferNormal->GetTexture()->GetSRV());
+	Shader->SetParameter("WorldPosGbuffer", GBufferWorldPos->GetTexture()->GetSRV());
+	Shader->SetParameter("OrmGbuffer", GBufferORM->GetTexture()->GetSRV());
+	Shader->SetParameter("EmissiveGbuffer", GBufferEmissive->GetTexture()->GetSRV());
+	Shader->SetParameter("SSAOBuffer", SSAOBuffer->GetTexture()->GetSRV());
+	Shader->SetParameter("LTC_LUT1", TextureMap["LtcMat_1"]->GetD3DTexture()->GetSRV());
+	Shader->SetParameter("LTC_LUT2", TextureMap["LtcMat_2"]->GetD3DTexture()->GetSRV());
 
 	if (LightCount > 0)
 	{
@@ -2880,8 +2880,8 @@ void TRender::DeferredLightingPass()
 	{
 		Shader->SetParameter("IBLIrradianceMap", IBLIrradianceMap->GetRTCube()->GetSRV());
 		
-		auto& BRDFIntegrationMapSRV = TextureMap["IBL_BRDF_LUT"]->GetD3DTexture()->SRVs[0];
-		Shader->SetParameter("BrdfLUT", BRDFIntegrationMapSRV.get());
+		auto BRDFIntegrationMapSRV = TextureMap["IBL_BRDF_LUT"]->GetD3DTexture()->GetSRV();
+		Shader->SetParameter("BrdfLUT", BRDFIntegrationMapSRV);
 
 		std::vector<TD3D12ShaderResourceView*> IBLPrefilterEnvMapSRVs;
 		for (UINT i = 0; i < IBLPrefilterMaxMipLevel; i++)
@@ -2928,7 +2928,7 @@ void TRender::DeferredLightingPass()
 		int SDFIndex = Pair.second;
 
 		TMesh& Mesh = MeshMap[MeshName];
-		auto SRV = Mesh.GetSDFTexture()->D3DTexture->SRVs[0].get();
+		auto SRV = Mesh.GetSDFTexture()->D3DTexture->GetSRV();
 		SDFTextureSRVs[SDFIndex] = SRV;
 	}
 
@@ -3016,7 +3016,7 @@ void TRender::SSRPass()
 
 	// Clear the back buffer.
 	float* ClearValue = ColorTexture->GetRTVClearValuePtr();
-	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->RTVs[0]->GetDescriptorHandle();
+	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->GetRTV()->GetDescriptorHandle();
 	CommandList->ClearRenderTargetView(RTVHandle, ClearValue, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
@@ -3032,12 +3032,12 @@ void TRender::SSRPass()
 
 	// Set paramters
 	SSRShader->SetParameter("cbPass", BasePassCBRef);
-	SSRShader->SetParameter("BaseColorGbuffer", GBufferBaseColor->GetTexture()->SRVs[0].get());
-	SSRShader->SetParameter("NormalGbuffer", GBufferNormal->GetTexture()->SRVs[0].get());
-	SSRShader->SetParameter("OrmGbuffer", GBufferORM->GetTexture()->SRVs[0].get());
+	SSRShader->SetParameter("BaseColorGbuffer", GBufferBaseColor->GetTexture()->GetSRV());
+	SSRShader->SetParameter("NormalGbuffer", GBufferNormal->GetTexture()->GetSRV());
+	SSRShader->SetParameter("OrmGbuffer", GBufferORM->GetTexture()->GetSRV());
 	SSRShader->SetParameter("DepthGbuffer", D3D12RHI->GetViewport()->GetDepthShaderResourceView());
-	SSRShader->SetParameter("ColorTexture", CacheColorTexture->SRVs[0].get());
-	SSRShader->SetParameter("BlueNoiseTexture", TextureMap["BlueNoiseTex"]->GetD3DTexture()->SRVs[0].get());
+	SSRShader->SetParameter("ColorTexture", CacheColorTexture->GetSRV());
+	SSRShader->SetParameter("BlueNoiseTexture", TextureMap["BlueNoiseTex"]->GetD3DTexture()->GetSRV());
 	SSRShader->SetParameter("BackDepthTexture", BackDepth->GetSRV());
 
 	// Bind paramters
@@ -3089,7 +3089,7 @@ void TRender::TAAPass()
 
 		// Clear the back buffer.
 		float* ClearValue = ColorTexture->GetRTVClearValuePtr();
-		D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->RTVs[0]->GetDescriptorHandle();
+		D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->GetRTV()->GetDescriptorHandle();
 		CommandList->ClearRenderTargetView(RTVHandle, ClearValue, 0, nullptr);
 
 		// Specify the buffers we are going to render to.
@@ -3103,9 +3103,9 @@ void TRender::TAAPass()
 
 		// Set paramters
 		TAAShader->SetParameter("cbPass", BasePassCBRef);
-		TAAShader->SetParameter("ColorTexture", CacheColorTexture->SRVs[0].get());
-		TAAShader->SetParameter("PrevColorTexture", PrevColorTexture->SRVs[0].get());
-		TAAShader->SetParameter("VelocityGBuffer", GBufferVelocity->GetTexture()->SRVs[0].get());
+		TAAShader->SetParameter("ColorTexture", CacheColorTexture->GetSRV());
+		TAAShader->SetParameter("PrevColorTexture", PrevColorTexture->GetSRV());
+		TAAShader->SetParameter("VelocityGBuffer", GBufferVelocity->GetTexture()->GetSRV());
 		TAAShader->SetParameter("DepthGbuffer", D3D12RHI->GetViewport()->GetDepthShaderResourceView());
 
 		// Bind paramters
@@ -3259,7 +3259,7 @@ void TRender::GatherAllSpriteBatchs()
 	{
 		TSpriteItem SpriteItem;
 		TTexture* Texture = TextureMap[Sprite.TextureName].get();
-		SpriteItem.SpriteSRV = Texture->GetD3DTexture()->SRVs[0].get();
+		SpriteItem.SpriteSRV = Texture->GetD3DTexture()->GetSRV();
 		SpriteItem.TextureSize = Sprite.TextureSize;
 		SpriteItem.SourceRect = Sprite.SourceRect;
 		SpriteItem.DestRect = Sprite.DestRect;
@@ -3276,7 +3276,7 @@ void TRender::GatherAllSpriteBatchs()
 		{
 			TSpriteItem SpriteItem;
 			TTexture* Texture = SpriteFont->GetFontTexture().get();
-			SpriteItem.SpriteSRV = Texture->GetD3DTexture()->SRVs[0].get();
+			SpriteItem.SpriteSRV = Texture->GetD3DTexture()->GetSRV();
 			SpriteItem.TextureSize = Sprite.TextureSize;
 			SpriteItem.SourceRect = Sprite.SourceRect;
 			SpriteItem.DestRect = Sprite.DestRect;
@@ -3370,7 +3370,7 @@ void TRender::SpritePass()
 	D3D12RHI->TransitionResource(ColorTexture->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// Specify the buffers we are going to render to.
-	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->RTVs[0]->GetDescriptorHandle();
+	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->GetRTV()->GetDescriptorHandle();
 	CommandList->OMSetRenderTargets(1, &RTVHandle, true, &DepthStencilView());
 
 	// Draw all SpriteBatchs
@@ -3495,7 +3495,7 @@ void TRender::DebugSDFScenePass()
 
 	// Clear the ColorTexture and depth buffer.
 	float* ClearValue = ColorTexture->GetRTVClearValuePtr();
-	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->RTVs[0]->GetDescriptorHandle();
+	D3D12_CPU_DESCRIPTOR_HANDLE RTVHandle = ColorTexture->GetRTV()->GetDescriptorHandle();
 	CommandList->ClearRenderTargetView(RTVHandle, ClearValue, 0, nullptr);
 	CommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
@@ -3515,7 +3515,7 @@ void TRender::DebugSDFScenePass()
 		int SDFIndex = Pair.second;
 
 		TMesh& Mesh = MeshMap[MeshName];
-		auto SRV = Mesh.GetSDFTexture()->D3DTexture->SRVs[0].get();
+		auto SRV = Mesh.GetSDFTexture()->D3DTexture->GetSRV();
 		SDFTextureSRVs[SDFIndex] = SRV;
 	}
 
@@ -3605,7 +3605,7 @@ void TRender::PostProcessPass()
 
 	// Set paramters
 	//PostProcessShader->SetParameter("cbPass", BasePassCBRef);
-	PostProcessShader->SetParameter("ColorTexture", ColorTexture->SRVs[0].get());
+	PostProcessShader->SetParameter("ColorTexture", ColorTexture->GetSRV());
 
 	// Bind paramters
 	PostProcessShader->BindParameters();

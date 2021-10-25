@@ -5,13 +5,13 @@ TotoroEngine is a toy 3D game engine using DirectX 12.
 1. Download FBX SDK VS2019: https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-2
 2. Install FBX SDK, then copy "include" and "lib" folders to TotoroEngine\Engine\ThirdParty\FBX_SDK\
 3. Open TotoroEngine.sln with Visual Studio 2019.
-4. Chose a sample project (such as "Sample-PBR"), set it as startup project, build project.
+4. Choose a sample project (such as "Sample-PBR"), set it as startup project, build project.
 5. Copy the libfbxsdk.dll (from TotoroEngine\Engine\ThirdParty\FBX_SDK\lib\vs2019\x64\debug) to the debug folder of sample project (such as TotoroEngine\Samples\Sample-PBR\Binaries\x64\Debug).
 6. Run.
 
 # Features
 ## Basis
-* D3D12 Memory Management
+* D3D12 Memory Allocation
 * D3D12 Descriptor Management
 * D3D12 Resource Binding
 
@@ -84,3 +84,7 @@ TotoroEngine is a toy 3D game engine using DirectX 12.
   
 * PostProcess
   * ToneMapping
+  
+# Document
+https://www.zhihu.com/column/c_1434895110592552960 (Chinese)
+  

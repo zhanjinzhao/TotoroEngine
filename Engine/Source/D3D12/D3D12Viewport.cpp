@@ -132,7 +132,7 @@ TD3D12Resource* TD3D12Viewport::GetCurrentBackBuffer() const
 
 TD3D12RenderTargetView* TD3D12Viewport::GetCurrentBackBufferView() const
 {
-	return RenderTargetTextures[CurrBackBuffer]->RTVs[0].get();
+	return RenderTargetTextures[CurrBackBuffer]->GetRTV();
 }
 
 float* TD3D12Viewport::GetCurrentBackBufferClearColor() const
@@ -142,12 +142,12 @@ float* TD3D12Viewport::GetCurrentBackBufferClearColor() const
 
 TD3D12DepthStencilView* TD3D12Viewport::GetDepthStencilView() const
 {
-	return DepthStencilTexture->DSVs[0].get();
+	return DepthStencilTexture->GetDSV();
 }
 
 TD3D12ShaderResourceView* TD3D12Viewport::GetDepthShaderResourceView() const
 {
-	return DepthStencilTexture->SRVs[0].get();
+	return DepthStencilTexture->GetSRV();
 }
 
 TD3D12ViewportInfo TD3D12Viewport::GetViewportInfo() const

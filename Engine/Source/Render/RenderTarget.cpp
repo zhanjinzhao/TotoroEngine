@@ -52,7 +52,7 @@ TD3D12RenderTargetView* TRenderTarget2D::GetRTV() const
 	}
 	else
 	{
-		return D3DTexture->RTVs[0].get();
+		return D3DTexture->GetRTV();
 	}
 }
 
@@ -60,7 +60,7 @@ TD3D12DepthStencilView* TRenderTarget2D::GetDSV() const
 {
 	if (bRenderDepth)
 	{
-		return D3DTexture->DSVs[0].get();
+		return D3DTexture->GetDSV();
 	}
 	else
 	{
@@ -70,7 +70,7 @@ TD3D12DepthStencilView* TRenderTarget2D::GetDSV() const
 
 TD3D12ShaderResourceView* TRenderTarget2D::GetSRV() const
 {
-	return D3DTexture->SRVs[0].get();
+	return D3DTexture->GetSRV();
 }
 
 TRenderTargetCube::TRenderTargetCube(TD3D12RHI* InD3D12RHI, bool RenderDepth, UINT InWidth, UINT InHeight, DXGI_FORMAT InFormat, TVector4 InClearValue)
@@ -113,9 +113,7 @@ TD3D12RenderTargetView* TRenderTargetCube::GetRTV(int Index) const
 	}
 	else
 	{
-		assert(D3DTexture->RTVs.size() > Index);
-
-		return D3DTexture->RTVs[Index].get();
+		return D3DTexture->GetRTV(Index);
 	}
 }
 
@@ -123,9 +121,7 @@ TD3D12DepthStencilView* TRenderTargetCube::GetDSV(int Index) const
 {
 	if (bRenderDepth)
 	{
-		assert(D3DTexture->DSVs.size() > Index);
-
-		return D3DTexture->DSVs[Index].get();
+		return D3DTexture->GetDSV(Index);
 	}
 	else
 	{
@@ -135,5 +131,5 @@ TD3D12DepthStencilView* TRenderTargetCube::GetDSV(int Index) const
 
 TD3D12ShaderResourceView* TRenderTargetCube::GetSRV() const
 {
-	return D3DTexture->SRVs[0].get();
+	return D3DTexture->GetSRV();
 }

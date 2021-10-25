@@ -22,11 +22,11 @@ public:
 	void Reset();
 
 private:
-	void CreateCacheSrvDescriptorHeap();
+	void CreateCacheCbvSrvUavDescriptorHeap();
 
 	void CreateCacheRtvDescriptorHeap();
 
-	void ResetCacheSrvDescriptorHeap();
+	void ResetCacheCbvSrvUavDescriptorHeap();
 
 	void ResetCacheRtvDescriptorHeap();
 

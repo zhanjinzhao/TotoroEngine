@@ -152,7 +152,7 @@ void  TD3D12RHI::CreateTextureViews(TD3D12TextureRef TextureRef, const TTextureI
 			SrvDesc.Texture3D.MipLevels = (uint16_t)TextureInfo.MipCount;
 		}
 
-		TextureRef->SRVs.push_back(std::make_unique<TD3D12ShaderResourceView>(GetDevice(), SrvDesc, TextureResource));
+		TextureRef->AddSRV(std::make_unique<TD3D12ShaderResourceView>(GetDevice(), SrvDesc, TextureResource));
 	}
 
 	// Create RTV
@@ -172,7 +172,7 @@ void  TD3D12RHI::CreateTextureViews(TD3D12TextureRef TextureRef, const TTextureI
 			RtvDesc.Format = TextureInfo.RTVFormat;
 		}
 
-		TextureRef->RTVs.push_back(std::make_unique<TD3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource));
+		TextureRef->AddRTV(std::make_unique<TD3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource));
 	}
 	else if (CreateFlags & TexCreate_CubeRTV)
 	{
@@ -194,7 +194,7 @@ void  TD3D12RHI::CreateTextureViews(TD3D12TextureRef TextureRef, const TTextureI
 				RtvDesc.Format = TextureInfo.RTVFormat;
 			}
 
-			TextureRef->RTVs.push_back(std::make_unique<TD3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource));
+			TextureRef->AddRTV(std::make_unique<TD3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource));
 		}
 	}
 
@@ -215,7 +215,7 @@ void  TD3D12RHI::CreateTextureViews(TD3D12TextureRef TextureRef, const TTextureI
 			DSVDesc.Format = TextureInfo.DSVFormat;
 		}
 
-		TextureRef->DSVs.push_back(std::make_unique<TD3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource));
+		TextureRef->AddDSV(std::make_unique<TD3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource));
 	}
 	else if (CreateFlags & TexCreate_CubeDSV)
 	{
@@ -237,7 +237,7 @@ void  TD3D12RHI::CreateTextureViews(TD3D12TextureRef TextureRef, const TTextureI
 				DSVDesc.Format = TextureInfo.DSVFormat;
 			}
 
-			TextureRef->DSVs.push_back(std::make_unique<TD3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource));
+			TextureRef->AddDSV(std::make_unique<TD3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource));
 		}
 	}
 
@@ -257,7 +257,7 @@ void  TD3D12RHI::CreateTextureViews(TD3D12TextureRef TextureRef, const TTextureI
 			UAVDesc.Format = TextureInfo.UAVFormat;
 		}
 
-		TextureRef->UAVs.push_back(std::make_unique<TD3D12UnorderedAccessView>(GetDevice(), UAVDesc, TextureResource));
+		TextureRef->AddUAV(std::make_unique<TD3D12UnorderedAccessView>(GetDevice(), UAVDesc, TextureResource));
 	}
 }
 
