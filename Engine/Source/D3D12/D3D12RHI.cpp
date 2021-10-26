@@ -1,6 +1,10 @@
 #include "D3D12RHI.h"
 #include <assert.h>
 
+// If you don't install "Graphics Tools", set InstalledDebugLayers to false
+// Ref: https://stackoverflow.com/questions/60157794/dx12-d3d12getdebuginterface-app-requested-interface-depends-on-sdk-component
+#define InstalledDebugLayers true
+
 using Microsoft::WRL::ComPtr;
 
 TD3D12RHI::TD3D12RHI()
@@ -16,7 +20,8 @@ void TD3D12RHI::Initialize(HWND WindowHandle, int WindowWidth, int WindowHeight)
 {
 	// D3D12 debug
 	UINT DxgiFactoryFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG) 
+ 
+#if (defined(DEBUG) || defined(_DEBUG)) && InstalledDebugLayers 
 	{
 		ComPtr<ID3D12Debug> DebugController;
 		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(DebugController.GetAddressOf())));

@@ -1,6 +1,11 @@
 # TotoroEngine
 TotoroEngine is a toy 3D game engine using DirectX 12.
 
+# Prerequisites
+1. Only support Windows(Only test on Windows 10).
+2. If you have not install "Graphics Tools", please install it to enable DirectX debug layers, see https://stackoverflow.com/questions/60157794/dx12-d3d12getdebuginterface-app-requested-interface-depends-on-sdk-component
+   Or you can set the "InstalledDebugLayers" macro in D3D12RHI.cpp to false. 
+
 # Build and Run
 1. Download FBX SDK VS2019: https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-2
 2. Install FBX SDK, then copy "include" and "lib" folders to TotoroEngine\Engine\ThirdParty\FBX_SDK\
