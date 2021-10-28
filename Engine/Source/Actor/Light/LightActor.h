@@ -82,7 +82,7 @@ public:
 protected:
 	ELightType Type = ELightType::None;
 
-	TVector3 Color = { 0.5f, 0.5f, 0.5f };
+	TVector3 Color = TVector3::One;
 
 	float Intensity = 10.0f;
 

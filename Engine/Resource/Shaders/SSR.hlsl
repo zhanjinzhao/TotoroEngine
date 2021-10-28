@@ -163,7 +163,8 @@ float4 PS(VertexOut pin) : SV_TARGET
 			float4 SampleColor = ColorTexture.SampleLevel(gsamPointClamp, OutUV, 0);
 			SampleColor *= CalculateAlpha(OutUV);
 				
-			float Weight = DirectBRDF(ReflectDir, NormalV, normalize(-PosV), Roughness, Metallic, BaseColor).r / max(1e-5, HitPDF); //TODO
+			float NoL = saturate(dot(NormalV, ReflectDir));
+			float Weight = DefaultBRDF(ReflectDir, NormalV, normalize(-PosV), Roughness, Metallic, BaseColor).r * NoL/ max(1e-5, HitPDF); //TODO
 			
 			TraceColor += SampleColor * Weight;
 			WeightSum += Weight;

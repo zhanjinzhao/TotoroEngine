@@ -8,6 +8,12 @@ float Square( float x )
 	return x*x;
 }
 
+float Pow4( float x )
+{
+	float xx = x*x;
+	return xx * xx;
+}
+
 // Transforms a normal map sample to world space.
 float3 NormalSampleToWorldSpace(float3 NormalMapSample, float3 UnitNormalW, float3 TangentW)
 {
