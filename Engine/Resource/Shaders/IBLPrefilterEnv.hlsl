@@ -58,11 +58,11 @@ float4 PS(VertexOut pin) : SV_TARGET
         float3 H  = ImportanceSampleGGX(Xi, N, roughness).xyz;
         float3 L  = normalize(2.0 * dot(V, H) * H - V);
 
-        float NdotL = max(dot(N, L), 0.0);
-        if(NdotL > 0.0)
+        float NoL = saturate(dot(N, L));
+        if(NoL > 0.0)
         {	
-            PrefilteredColor += EnvironmentMap.Sample(gsamAnisotropicWrap, L).rgb * NdotL;
-            TotalWeight      += NdotL;
+            PrefilteredColor += EnvironmentMap.Sample(gsamAnisotropicWrap, L).rgb * NoL;
+            TotalWeight      += NoL;
         }
     }
 	

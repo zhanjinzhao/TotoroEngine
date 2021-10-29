@@ -102,26 +102,23 @@ float3 AreaLighting(float3 Radiance, float3 Normal, float3 ViewDir, float3 World
     return (Kd * DiffuseBRDFCos + SpecularBRDFCos) * Radiance;
 }
 
-float3 FresnelSchlickRoughness(float3 F0, float3 V, float3 N, float Roughness)
+float3 EnvBRDF(float Metallic, float3 BaseColor, float2 LUT)
 {
-    float NdotV = max(dot(V, N), 0.0f);
-    float r1 = 1.0f - Roughness;
-    float3 Lambda = max(float3(r1, r1, r1), F0);
-    return F0 + (Lambda - F0) * pow(1 - NdotV, 5.0f);
+    float3 F0 = lerp(F0_DIELECTRIC.rrr, BaseColor.rgb, Metallic); 
+    
+    return F0 * LUT.x + LUT.y;
 }
 
-float3 AmbientLighting(float3 Normal, float3 ViewDir, float Roughness, float Metallic,
-    float3 BaseColor, float3 Irradiance, float3 PrefilteredColor, float2 EnvBRDF, float ShadowFactor, float AmbientAccess)
+float3 AmbientLighting(float Metallic, float3 BaseColor, float3 Irradiance, float3 PrefilteredColor, float2 LUT, float AmbientAccess)
 {
-    // IBL diffuse
-    float3 F0 = lerp(F0_DIELECTRIC.rrr, BaseColor.rgb, Metallic); 
-    float3 F = FresnelSchlickRoughness(F0, ViewDir, Normal, Roughness);
-    float3 Diffuse = BaseColor * (1.0f - Metallic) * (float3(1.0f, 1.0f, 1.0f) - F) * Irradiance;
+    // IBL diffuse   
+    float3 DiffuseColor = (1.0 - Metallic) * BaseColor; // Metallic surfaces have no diffuse reflections
+    float3 DiffuseContribution = DiffuseColor  * Irradiance;
     
     // IBL specular
-    float3 Specular = PrefilteredColor * (F * EnvBRDF.x + EnvBRDF.y);
+    float3 SpecularContribution = PrefilteredColor * EnvBRDF(Metallic, BaseColor, LUT);
 
-    float3 Ambient = ( Diffuse + Specular) * AmbientAccess;
+    float3 Ambient = ( DiffuseContribution + SpecularContribution) * AmbientAccess;
     return Ambient;
 }
 

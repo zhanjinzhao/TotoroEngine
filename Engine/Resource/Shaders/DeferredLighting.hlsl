@@ -127,8 +127,6 @@ float4 PS(VertexOut pin) : SV_TARGET
 			// IBL ambient light
 			if (Light.LightType == 1) 
 			{
-				float ShadowFactor = 1.0f;
-
 				// Irradiance
 				float3 Irradiance = IBLIrradianceMap.SampleLevel(gsamLinearClamp, Normal, 0).rgb;
 			
@@ -136,11 +134,11 @@ float4 PS(VertexOut pin) : SV_TARGET
 				float3 ReflectDir = reflect(-ViewDir, Normal);
 				float3 PrefilteredColor  = GetPrefilteredColor(Roughness, ReflectDir);
 			
-				// EnvBRDF
+				// LUT value
 				float NoV = dot(Normal, ViewDir);
-				float2 EnvBRDF = BrdfLUT.SampleLevel(gsamLinearClamp, float2(NoV, Roughness), 0).rg;
+				float2 LUT = BrdfLUT.SampleLevel(gsamLinearClamp, float2(NoV, Roughness), 0).rg;
 			
-				FinalColor += AmbientLighting(Normal, ViewDir, Roughness, Metallic, BaseColor, Irradiance, PrefilteredColor, EnvBRDF, ShadowFactor, AmbientAccess);
+				FinalColor += AmbientLighting(Metallic, BaseColor, Irradiance, PrefilteredColor, LUT, AmbientAccess);
 			}
 			
 			// Directional light
