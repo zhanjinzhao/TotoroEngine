@@ -5,7 +5,7 @@ TSceneCaptureCube::TSceneCaptureCube(bool RenderDepth, UINT Size, DXGI_FORMAT Fo
 {
 	D3D12RHI = InD3D12RHI;
 
-	RTCube = std::make_unique<TRenderTargetCube>(D3D12RHI, RenderDepth, CubeMapSize, CubeMapSize, Format);
+	RTCube = std::make_unique<TRenderTargetCube>(D3D12RHI, RenderDepth, CubeMapSize, Format);
 
 	SetViewportAndScissorRect(CubeMapSize);
 }

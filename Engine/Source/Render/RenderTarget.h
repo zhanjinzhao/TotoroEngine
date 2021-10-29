@@ -56,7 +56,7 @@ private:
 class TRenderTargetCube : public TRenderTarget
 {
 public:
-	TRenderTargetCube(TD3D12RHI* InD3D12RHI, bool RenderDepth, UINT InWidth, UINT InHeight, DXGI_FORMAT InFormat, TVector4 InClearValue = TVector4::Zero);
+	TRenderTargetCube(TD3D12RHI* InD3D12RHI, bool RenderDepth, UINT Size, DXGI_FORMAT InFormat, TVector4 InClearValue = TVector4::Zero);
 
 	TD3D12RenderTargetView* GetRTV(int Index) const;
 

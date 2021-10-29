@@ -24,9 +24,7 @@ TotoroEngine is a toy 3D game engine using DirectX 12.
 * PBR (Physically Based Rendering)
   ![](Screenshots/PBR_Cyborg.png)
   
-  ![](Screenshots/PBR_Helmet.png)
-  
-  ![](Screenshots/PBR_Sphere.png)
+  ![](Screenshots/PBR_Helmet2.png)
   
   
   

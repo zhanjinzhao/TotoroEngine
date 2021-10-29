@@ -73,8 +73,8 @@ TD3D12ShaderResourceView* TRenderTarget2D::GetSRV() const
 	return D3DTexture->GetSRV();
 }
 
-TRenderTargetCube::TRenderTargetCube(TD3D12RHI* InD3D12RHI, bool RenderDepth, UINT InWidth, UINT InHeight, DXGI_FORMAT InFormat, TVector4 InClearValue)
-	:TRenderTarget(InD3D12RHI, RenderDepth, InWidth, InHeight, InFormat, InClearValue)
+TRenderTargetCube::TRenderTargetCube(TD3D12RHI* InD3D12RHI, bool RenderDepth, UINT Size, DXGI_FORMAT InFormat, TVector4 InClearValue)
+	:TRenderTarget(InD3D12RHI, RenderDepth, Size, Size, InFormat, InClearValue)
 {
 	CreateTexture();
 }
