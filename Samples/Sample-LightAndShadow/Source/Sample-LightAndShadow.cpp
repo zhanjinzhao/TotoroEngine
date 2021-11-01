@@ -236,7 +236,8 @@ public:
 		// Add Camera
 		auto Camera = AddActor<TCameraActor>("Camera");
 		CameraComponent = Camera->GetCameraComponent();
-		CameraComponent->SetWorldLocation(TVector3(0.0f, 0.0f, -4.0f));
+		CameraComponent->SetWorldLocation(TVector3(0.45f, 0.12f, -2.0f));
+		CameraComponent->RotateY(40.0f);
 		CameraComponent->UpdateViewMatrix();
 
 		// Add Floor

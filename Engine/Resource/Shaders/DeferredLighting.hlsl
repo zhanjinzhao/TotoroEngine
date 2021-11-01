@@ -214,7 +214,7 @@ float4 PS(VertexOut pin) : SV_TARGET
 				Points[3] = Light.AreaLightPoint3InWorld;
 				
 				float3 Radiance = Light.Intensity * Light.Color;
-				FinalColor += AreaLighting(Radiance, Normal, ViewDir, WorldPos, Roughness, Metallic, BaseColor, t1, t2, Points);
+				FinalColor += AreaLighting(Radiance, Normal, ViewDir, WorldPos, Metallic, BaseColor, t1, t2, Points);
 				
 			}
 		}

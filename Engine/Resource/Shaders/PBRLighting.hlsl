@@ -72,7 +72,7 @@ float3 DirectLighting(float3 Radiance, float3 LightDir, float3 Normal, float3 Vi
     return Radiance * BRDF * NoL * ShadowFactor;
 }
 
-float3 AreaLighting(float3 Radiance, float3 Normal, float3 ViewDir, float3 WorldPos, float Roughness, float Metallic, float3 BaseColor, float4 t1, float4 t2, float3 Points[4])
+float3 AreaLighting(float3 Radiance, float3 Normal, float3 ViewDir, float3 WorldPos, float Metallic, float3 BaseColor, float4 t1, float4 t2, float3 Points[4])
 {  
     float3x3 Minv = float3x3(
 		float3(t1.x,   0,   t1.z),
@@ -87,19 +87,15 @@ float3 AreaLighting(float3 Radiance, float3 Normal, float3 ViewDir, float3 World
 	);
       
     float3 F0 = lerp(F0_DIELECTRIC.rrr, BaseColor.rgb, Metallic);
-    float3 H = Normal; // Don't know light direction, so use normal to replace half vector
-    float  VoH = saturate(dot(ViewDir, H));
-    float3 F = FresnelSchlick(F0, VoH);
     
     float3 SpecularBRDFCos = LTC_Evaluate(Normal, ViewDir, WorldPos, Minv, Points, false);
     // BRDF shadowing and Fresnel
     SpecularBRDFCos *= (F0 * t2.x + (1.0f - F0) * t2.y);
     float3 DiffuseBRDFCos = LTC_Evaluate(Normal, ViewDir, WorldPos, Identity, Points, false);
     
-    float3 Kd = float3(1.0f, 1.0f, 1.0f) - F;
-    Kd *= 1.0 - Metallic; // Metallic surfaces have no diffuse reflections
+    DiffuseBRDFCos *= 1.0 - Metallic; // Metallic surfaces have no diffuse reflections
 
-    return (Kd * DiffuseBRDFCos + SpecularBRDFCos) * Radiance;
+    return (DiffuseBRDFCos + SpecularBRDFCos) * Radiance;
 }
 
 float3 EnvBRDF(float Metallic, float3 BaseColor, float2 LUT)
